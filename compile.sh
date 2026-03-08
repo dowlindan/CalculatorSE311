@@ -16,6 +16,6 @@ mkdir -p "$OUT_DIR"
 
 echo "Compiling Java sources..."
 javac -d "$OUT_DIR" $(find "$SRC_DIR" -name "*.java")
-jar cfve CalculatorServer.jar edu.drexel.se311.calculator.CalculatorClient -C out .
+jar cfve CalculatorClient.jar edu.drexel.se311.calculator.CalculatorClient -C out .
 jar cfve CalculatorServer.jar edu.drexel.se311.calculator.CalculatorServer -C out .
 
