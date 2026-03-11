@@ -20,8 +20,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-import edu.drexel.se311.calculator.net.ServerConnection;
-import edu.drexel.se311.calculator.observers.DisplayObserver;
+import edu.drexel.se311.calculator.observers.*;
 import edu.drexel.se311.calculator.states.CalculatorContext;
 
 public class CalculatorClient extends JFrame {

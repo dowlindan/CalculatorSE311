@@ -1,27 +1,27 @@
 package edu.drexel.se311.calculator;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import edu.drexel.se311.calculator.net.CalculatorProtocolMessage;
-
 /**
  * CALCULATOR SERVER
  *
- * Listens on localhost:9090 for incoming CalculatorProtocolMessage
- * objects. For each REQUEST received it:
+ * Listens on localhost:9090 for incoming client connections.
+ * For each connection it:
  *
- *   1. Deserializes the CalculatorProtocolMessage from the socket
- *   2. Extracts the ExpressionNode tree from the message
- *   3. Runs the visitor pipeline  (Validate → PrettyPrint → Evaluate)
- *   4. Sends back a RESPONSE or ERROR CalculatorProtocolMessage
+ *   1. Reads a result string from the client
+ *   2. Logs the result for auditing
+ *   3. Sends back an acknowledgement
  *
- * Each connection is handled on its own thread so the server can
- * serve multiple clients concurrently.
+ * Under the client-rich architecture, the server does not evaluate
+ * expressions — it merely receives result strings and logs them.
+ *
+ * Each connection is handled on its own thread for concurrent clients.
  */
 public class CalculatorServer {
 
@@ -50,47 +50,25 @@ public class CalculatorServer {
 
     private void handle(Socket socket) {
         try (socket) {
-            // Deserialize the incoming request message
-            ObjectInputStream  in  = new ObjectInputStream(socket.getInputStream());
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            // Read result string from client
+            BufferedReader in = new BufferedReader(
+                new InputStreamReader(socket.getInputStream())
+            );
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
-            CalculatorProtocolMessage request =
-                (CalculatorProtocolMessage) in.readObject();
+            String resultString = in.readLine();
+            
+            if (resultString != null) {
+                // Log the result
+                System.out.println("Received result from client: " + resultString);
+                
+                // Send acknowledgement
+                out.println("OK");
+            }
 
-
-            CalculatorProtocolMessage response = process(request);
-
-            // Serialize and send the response message back
-            out.writeObject(response);
-            out.flush();
-
-            // System.out.println("Sent response [" + response.getRequestId() + "] "
-            //     + "type=" + response.getType());
-
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             System.err.println("Connection error: " + e.getMessage());
         }
-    }
-
-    // ── Process request → visitor pipeline → build response ──────────────
-
-    private CalculatorProtocolMessage process(CalculatorProtocolMessage request) {
-        if (request.getType() != CalculatorProtocolMessage.Type.REQUEST) {
-            return CalculatorProtocolMessage.error(
-                "Expected REQUEST, got " + request.getType()
-            );
-        }
-
-        // Under the new client‑rich design the request payload is simply
-        // a string containing the calculation result.  The server does not
-        // attempt to evaluate anything; it merely logs the value and
-        // returns an acknowledgement message.
-        String resultString = request.getPayload();
-        System.out.println("Received result from client: " + resultString);
-
-        // We could add further logging or persistence here.  Always reply
-        // with a simple ack so the client knows the message made it.
-        return CalculatorProtocolMessage.response("OK");
     }
 
     // ── Entry point ───────────────────────────────────────────────────────
