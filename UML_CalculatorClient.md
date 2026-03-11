@@ -172,7 +172,7 @@ class ServerConnection implements CalculatorObserver {
     + onDisplayUpdate(text: String): void
     + onResultReady(result: int): void
     + onError(message: String): void
-    - sendToServer(message: CalculatorProtocolMessage): void
+    - sendToServer(resultString: String): void
 }
 
 ' =====================================================================

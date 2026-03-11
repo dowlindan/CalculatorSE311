@@ -229,22 +229,24 @@ note right of GUI
 end note
 
 Context -> Network : notifyResultReady(34)
-Network -> Server : sendToServer(message)
+Network -> Server : sendToServer("34")
 activate Server
 note right of Network
-  Creates CalculatorProtocolMessage.request("34")
-  Sends via Socket to localhost:9090
+  Creates result string "34"
+  Sends via BufferedReader/PrintWriter
+  to localhost:9090
 end note
 
-Server -> Server : ObjectInputStream.readObject()
-Server -> Server : process(request)
+Server -> Server : BufferedReader.readLine()
+Server -> Server : Logs: "Received result from client: 34"
 note right of Server
-  Receives: CalculatorProtocolMessage(REQUEST, "34")
-  Logs: "Received result from client: 34"
+  Receives: String "34"
+  Parses result value
+  Logs for auditing
 end note
-Server -> Network : ObjectOutputStream.writeObject(response)
+Server -> Network : PrintWriter.println("OK")
 note right of Server
-  Sends back: CalculatorProtocolMessage(RESPONSE, "OK")
+  Sends back: String "OK"
 end note
 deactivate Server
 
