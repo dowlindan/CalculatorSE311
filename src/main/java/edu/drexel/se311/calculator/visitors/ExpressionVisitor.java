@@ -13,7 +13,7 @@ import edu.drexel.se311.calculator.expressions.NumberNode;
  * The generic <T> is the return type of each visit — different visitors
  * return different things:
  *
- *   EvaluatorVisitor    → Double  (the computed result)
+ *   EvaluatorVisitor    → Integer  (the computed result)
  *   PrettyPrintVisitor  → String  (formatted expression e.g. "3 + 4 * 2")
  *   ValidatorVisitor    → Void    (throws on invalid input, else silent)
  */

@@ -17,52 +17,38 @@ public class GettingAddSubOperandState implements CalculatorState {
 
     @Override
     public void onDigit(CalculatorContext ctx, int digit) {
-        ctx.setCurrentInput(ctx.getCurrentInput() * 10 + digit);
-        // Stay in this state
+        // ex: 3 + 3(3) => 3 + 33
+       ctx.appendDigit(digit);
     }
 
     @Override
     public void onAddSub(CalculatorContext ctx, char op) {
-        // Apply the pending + or - now, then wait for next operand
-        double result = applyAddSub(ctx);
-        ctx.setAccumulator(result);
-        ctx.setCurrentInput(0);
-        ctx.setPendingAddSub(op);
-        ctx.transitionTo(ctx.waitingForAddSub);
+       // e.g. 3 + 4 +: Check precedence; lower-prec causes evaluation
+       ctx.storeLeftOperand(op);
+       ctx.resetCurrentNumber();
+       ctx.setPendingOp(op);
+       ctx.transitionTo(new WaitingForAddSubOperandState());
     }
 
     @Override
     public void onMulDiv(CalculatorContext ctx, char op) {
-        // e.g. "3 + 4 *": the 4 becomes the LHS of the upcoming * or /
-        // The pending add/sub stays stored; mul/div takes priority next
-        ctx.setAccumulator(ctx.getCurrentInput());
-        ctx.setCurrentInput(0);
-        ctx.setPendingMulDiv(op);
-        ctx.transitionTo(ctx.waitingForMulDiv);
+        // e.g. "3 + 4 *": + has lower precedence so defer evaluation;
+        // * will be applied to 4 first, then + will apply the result to 3
+        ctx.storeLeftOperand(op);
+        ctx.resetCurrentNumber();
+        ctx.setPendingOp(op);
+        ctx.transitionTo(new WaitingForMulDivOperandState());
     }
 
     @Override
     public void onEquals(CalculatorContext ctx) {
-        double result = applyAddSub(ctx);
-        ctx.setAccumulator(result);
-        ctx.setCurrentInput(0);
-        ctx.setPendingAddSub((char) 0);
-        ctx.transitionTo(ctx.calculateState);
+        // e.g. (expr) + 4 =
+        ctx.submitEquals();
+        ctx.transitionTo(new CalculateState());
     }
 
     @Override
     public void onClear(CalculatorContext ctx) {
         ctx.reset();
-    }
-
-    // ── Helper ────────────────────────────────────────────────────────────
-    private double applyAddSub(CalculatorContext ctx) {
-        double lhs = ctx.getAccumulator();
-        double rhs = ctx.getCurrentInput();
-        return switch (ctx.getPendingAddSub()) {
-            case '+' -> lhs + rhs;
-            case '-' -> lhs - rhs;
-            default  -> rhs;   // no operator stored — just use rhs
-        };
     }
 }

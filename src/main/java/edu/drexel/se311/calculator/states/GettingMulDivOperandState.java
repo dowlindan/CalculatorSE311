@@ -19,87 +19,39 @@ public class GettingMulDivOperandState implements CalculatorState {
 
     @Override
     public void onDigit(CalculatorContext ctx, int digit) {
-        ctx.setCurrentInput(ctx.getCurrentInput() * 10 + digit);
+        ctx.appendDigit(digit);
         // Stay in this state
     }
 
+    // Handle lower precedence operator - evaluate pending * or / first
     @Override
     public void onAddSub(CalculatorContext ctx, char op) {
-        // e.g. "3 + 4 * 2 +"
-        // First resolve the * 2  →  intermediate = 4 * 2 = 8
-        // Then fold into accumulator via pending add/sub if any
-        double mulDivResult = applyMulDiv(ctx);
-
-        double newAccumulator;
-        if (ctx.getPendingAddSub() != 0) {
-            newAccumulator = applyAddSub(ctx.getAccumulator(),
-                                         ctx.getPendingAddSub(),
-                                         mulDivResult);
-            ctx.setPendingAddSub((char) 0);
-        } else {
-            newAccumulator = mulDivResult;
-        }
-
-        ctx.setAccumulator(newAccumulator);
-        ctx.setCurrentInput(0);
-        ctx.setPendingMulDiv((char) 0);
-        ctx.setPendingAddSub(op);
-        ctx.transitionTo(ctx.waitingForAddSub);
+       // e.g. 3 * 4 +: Evaluate 3*4 first, store result, then apply +
+       ctx.storeLeftOperand(op);
+       ctx.resetCurrentNumber();
+       ctx.setPendingOp(op);
+       ctx.transitionTo(new WaitingForAddSubOperandState());
     }
 
     @Override
     public void onMulDiv(CalculatorContext ctx, char op) {
-        // e.g. "6 * 3 *" — resolve current * 3 first, then wait for next operand
-        double result = applyMulDiv(ctx);
-        ctx.setAccumulator(result);
-        ctx.setCurrentInput(0);
-        ctx.setPendingMulDiv(op);
-        ctx.transitionTo(ctx.waitingForMulDiv);
+        // e.g. "3 * 4 *": Both are same precedence, so evaluate 3*4 first
+        ctx.storeLeftOperand(op);
+        ctx.resetCurrentNumber();
+        ctx.setPendingOp(op);
+        ctx.transitionTo(new WaitingForMulDivOperandState());
     }
 
     @Override
     public void onEquals(CalculatorContext ctx) {
-        // Resolve mul/div first (higher precedence)
-        double mulDivResult = applyMulDiv(ctx);
-
-        // Then fold into any pending add/sub
-        double finalResult;
-        if (ctx.getPendingAddSub() != 0) {
-            finalResult = applyAddSub(ctx.getAccumulator(),
-                                      ctx.getPendingAddSub(),
-                                      mulDivResult);
-        } else {
-            finalResult = mulDivResult;
-        }
-
-        ctx.setAccumulator(finalResult);
-        ctx.setCurrentInput(0);
-        ctx.setPendingMulDiv((char) 0);
-        ctx.setPendingAddSub((char) 0);
-        ctx.transitionTo(ctx.calculateState);
+        // evaluate the expression built so far
+        ctx.submitEquals();
+        ctx.transitionTo(new CalculateState());
     }
+
 
     @Override
     public void onClear(CalculatorContext ctx) {
         ctx.reset();
-    }
-
-    // ── Helpers ───────────────────────────────────────────────────────────
-    private double applyMulDiv(CalculatorContext ctx) {
-        double lhs = ctx.getAccumulator();
-        double rhs = ctx.getCurrentInput();
-        return switch (ctx.getPendingMulDiv()) {
-            case '*' -> lhs * rhs;
-            case '/' -> (rhs == 0) ? Double.NaN : lhs / rhs;
-            default  -> rhs;
-        };
-    }
-
-    private double applyAddSub(double lhs, char op, double rhs) {
-        return switch (op) {
-            case '+' -> lhs + rhs;
-            case '-' -> lhs - rhs;
-            default  -> rhs;
-        };
     }
 }

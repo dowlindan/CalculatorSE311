@@ -14,6 +14,7 @@ package edu.drexel.se311.calculator.observers;
  *   onError        — something went wrong (e.g. division by zero)
  */
 public interface CalculatorObserver {
-    void onResultReady(double result, String expression);
+    void onDisplayUpdate(String text);
+    void onResultReady(int result);
     void onError(String message);
 }

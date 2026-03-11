@@ -24,19 +24,19 @@ public class ExpressionBuilder {
 
     // ── Leaf ──────────────────────────────────────────────────────────────
 
-    public static NumberNode number(double value) {
+    public static NumberNode number(int value) {
         return new NumberNode(value);
     }
 
     // ── Binary ────────────────────────────────────────────────────────────
 
-    /** Wrap two raw doubles in a BinaryOperationNode */
-    public static BinaryOperationNode binary(double left, char operator, double right) {
+    /** Wrap two raw ints in a BinaryOperationNode */
+    public static BinaryOperationNode binary(int left, char operator, int right) {
         return new BinaryOperationNode(number(left), operator, number(right));
     }
 
-    /** Wrap a node and a raw double (LHS is already a tree) */
-    public static BinaryOperationNode binary(ExpressionNode left, char operator, double right) {
+    /** Wrap a node and a raw ints (LHS is already a tree) */
+    public static BinaryOperationNode binary(ExpressionNode left, char operator, int right) {
         return new BinaryOperationNode(left, operator, number(right));
     }
 

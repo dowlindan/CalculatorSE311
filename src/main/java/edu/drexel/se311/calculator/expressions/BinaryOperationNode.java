@@ -1,5 +1,7 @@
 package edu.drexel.se311.calculator.expressions;
 
+import java.io.Serializable;
+
 import edu.drexel.se311.calculator.visitors.ExpressionVisitor;
 
 /**
@@ -21,8 +23,9 @@ import edu.drexel.se311.calculator.visitors.ExpressionVisitor;
  *
  * Supported operators: + - * /
  */
-public class BinaryOperationNode implements ExpressionNode {
+public class BinaryOperationNode implements ExpressionNode, Serializable {
 
+    
     private final ExpressionNode left;
     private final ExpressionNode right;
     private final char operator;
@@ -34,25 +37,6 @@ public class BinaryOperationNode implements ExpressionNode {
     }
 
     // ── ExpressionNode ────────────────────────────────────────────────────
-
-    @Override
-    public double evaluate() {
-        double l = left.evaluate();    // recurse left subtree
-        double r = right.evaluate();   // recurse right subtree
-
-        return switch (operator) {
-            case '+' -> l + r;
-            case '-' -> l - r;
-            case '*' -> l * r;
-            case '/' -> {
-                if (r == 0) throw new ArithmeticException("Division by zero");
-                yield l / r;
-            }
-            default -> throw new IllegalArgumentException(
-                "Unknown operator: " + operator
-            );
-        };
-    }
 
     @Override
     public <T> T accept(ExpressionVisitor<T> visitor) {
@@ -67,6 +51,6 @@ public class BinaryOperationNode implements ExpressionNode {
 
     @Override
     public String toString() {
-        return "(" + left + " " + operator + " " + right + ")";
+        return left.toString() + operator + right.toString();
     }
 }

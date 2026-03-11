@@ -1,5 +1,7 @@
 package edu.drexel.se311.calculator.expressions;
 
+import java.io.Serializable;
+
 import edu.drexel.se311.calculator.visitors.ExpressionVisitor;
 
 /**
@@ -12,20 +14,15 @@ import edu.drexel.se311.calculator.visitors.ExpressionVisitor;
  *   NumberNode(3)    →  the literal 3
  *   NumberNode(4.5)  →  the literal 4.5
  */
-public class NumberNode implements ExpressionNode {
+public class NumberNode implements ExpressionNode, Serializable {
 
-    private final double value;
+    private final int value;
 
-    public NumberNode(double value) {
+    public NumberNode(int value) {
         this.value = value;
     }
 
     // ── ExpressionNode ────────────────────────────────────────────────────
-
-    @Override
-    public double evaluate() {
-        return value;   // base case — no children to recurse into
-    }
 
     @Override
     public <T> T accept(ExpressionVisitor<T> visitor) {
@@ -34,16 +31,13 @@ public class NumberNode implements ExpressionNode {
 
     // ── Accessor ──────────────────────────────────────────────────────────
 
-    public double getValue() {
+    public int getValue() {
         return value;
     }
 
     @Override
     public String toString() {
         // Print as integer when there is no fractional part
-        if (value == Math.floor(value) && !Double.isInfinite(value)) {
-            return String.valueOf((long) value);
-        }
         return String.valueOf(value);
     }
 }

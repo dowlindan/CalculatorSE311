@@ -11,8 +11,8 @@ public class StartState implements CalculatorState {
 
     @Override
     public void onDigit(CalculatorContext ctx, int digit) {
-        ctx.setCurrentInput(digit);
-        ctx.transitionTo(ctx.gettingFirstOperand);
+        ctx.appendDigit(digit);
+        ctx.transitionTo(new GettingFirstOperandState());
     }
 
     // Everything below is a no-op in the Start state (see diagram loop)

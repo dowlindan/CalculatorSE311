@@ -1,5 +1,7 @@
 package edu.drexel.se311.calculator.expressions;
 
+import java.io.Serializable;
+
 import edu.drexel.se311.calculator.visitors.ExpressionVisitor;
 
 /**
@@ -15,11 +17,8 @@ import edu.drexel.se311.calculator.visitors.ExpressionVisitor;
  *
  * The generic <T> on accept() lets different visitors return different
  * types:
- *   EvaluatorVisitor   → Double
- *   PrettyPrintVisitor → String
- *   ValidatorVisitor   → Void
+ *   EvaluatorVisitor   → Int
  */
-public interface ExpressionNode {
-    double evaluate();
+public interface ExpressionNode extends Serializable {
     <T> T accept(ExpressionVisitor<T> visitor);
 }

@@ -22,13 +22,12 @@ public class DisplayObserver implements CalculatorObserver {
     }
 
     @Override
-    public void onResultReady(double result, String expression) {
-        // Show as a clean integer when there is no fractional part
-        if (result == Math.floor(result) && !Double.isInfinite(result)) {
-            display.setText(String.valueOf((long) result));
-        } else {
-            display.setText(String.valueOf(result));
-        }
+    public void onDisplayUpdate(String text) {
+        display.setText(text);
+    }
+    @Override
+    public void onResultReady(int result) {
+        display.setText(String.valueOf(result));
     }
 
     @Override

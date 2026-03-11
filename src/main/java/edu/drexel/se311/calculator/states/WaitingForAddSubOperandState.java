@@ -17,21 +17,22 @@ public class WaitingForAddSubOperandState implements CalculatorState {
 
     @Override
     public void onDigit(CalculatorContext ctx, int digit) {
-        ctx.setCurrentInput(digit);
-        ctx.transitionTo(ctx.gettingAddSub);
+        ctx.resetCurrentNumber();
+        ctx.appendDigit(digit);
+        ctx.transitionTo(new GettingAddSubOperandState());
     }
 
     @Override
     public void onAddSub(CalculatorContext ctx, char op) {
         // User changed mind (e.g. typed "5 + -") — replace the operator
-        ctx.setPendingAddSub(op);
+        ctx.setPendingOp(op);
         // Stay in this state
     }
 
     @Override
     public void onMulDiv(CalculatorContext ctx, char op) {
-        ctx.setPendingMulDiv(op);
-        ctx.transitionTo(ctx.waitingForMulDiv);
+        ctx.setPendingOp(op);
+        ctx.transitionTo(new WaitingForMulDivOperandState());
     }
 
     @Override

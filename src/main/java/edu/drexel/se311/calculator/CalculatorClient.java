@@ -20,6 +20,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
+import edu.drexel.se311.calculator.net.ServerConnection;
+import edu.drexel.se311.calculator.observers.DisplayObserver;
+import edu.drexel.se311.calculator.states.CalculatorContext;
+
 public class CalculatorClient extends JFrame {
 
     private final JTextField display;
@@ -64,13 +68,25 @@ public class CalculatorClient extends JFrame {
         display.setPreferredSize(new Dimension(0, 52));
         root.add(display, BorderLayout.NORTH);
 
+        // ── Wire ServerConnection + observers ─────────────────────────────
+        ServerConnection connection = new ServerConnection(
+            CalculatorServer.HOST, CalculatorServer.PORT
+        );
+
+        // ── Create state machine and give it the observers ─────────────────
+        CalculatorContext context = new CalculatorContext();
+        context.addObserver(new DisplayObserver(display));
+        context.addObserver(connection);
+
         // ── Button grid ──────────────────────────────────────────────────
         JPanel grid = new JPanel(new GridLayout(4, 4, 6, 6));
         grid.setBackground(BG);
 
         for (String[] row : BUTTON_LABELS) {
             for (String label : row) {
-                grid.add(makeButton(label));
+                JButton btn = makeButton(label);
+                btn.addActionListener(e -> routeInput(context, label));
+                grid.add(btn);
             }
         }
 
@@ -82,7 +98,30 @@ public class CalculatorClient extends JFrame {
         setMinimumSize(new Dimension(280, 320));
     }
 
-    // ── Styled button — no ActionListener attached ────────────────────────
+    // ── Route button label → state machine ───────────────────────────────
+    //
+    // The state machine decides what to do with each input.
+    // On "=" the current state will eventually call
+    // CalculateState.submit() → context.submitToServer()
+    // → ServerConnection.send() → socket → CalculatorServer
+    // which wraps the expression in a CalculatorProtocolMessage.
+    //
+    private void routeInput(CalculatorContext context, String label) {
+        System.out.println("Label: " + label);
+        switch (label) {
+            case "0","1","2","3","4","5","6","7","8","9"
+                             -> context.onDigit(Integer.parseInt(label));
+            case "+", "-"   -> context.onAddSub(label.charAt(0));
+            case "*", "/"   -> context.onMulDiv(label.charAt(0));
+            case "="        -> context.onEquals();
+            case "C"        -> {
+                context.onClear();
+                display.setText("0");
+            }
+        }
+    }
+
+    // ── Styled button factory ─────────────────────────────────────────────
     private JButton makeButton(String label) {
         JButton btn = new JButton(label) {
             @Override
@@ -116,9 +155,6 @@ public class CalculatorClient extends JFrame {
         btn.setOpaque(false);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btn.setPreferredSize(new Dimension(60, 52));
-
-        // No ActionListener — buttons are intentionally dead.
-        // Logic will be wired in later via State + Observer patterns.
 
         return btn;
     }

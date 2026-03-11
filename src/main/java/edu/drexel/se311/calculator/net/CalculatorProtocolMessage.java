@@ -2,8 +2,6 @@ package edu.drexel.se311.calculator.net;
 
 import java.io.Serializable;
 
-import edu.drexel.se311.calculator.expressions.ExpressionNode;
-
 /**
  * PROTOCOL MESSAGE
  *
@@ -21,45 +19,41 @@ public class CalculatorProtocolMessage implements Serializable {
 
     public enum Type { REQUEST, RESPONSE, ERROR }
 
-    private final Type           type;
-    private final ExpressionNode expression;   // REQUEST carries this
-    private final double         result;        // RESPONSE carries this
-    private final String         errorMessage;  // ERROR carries this
+    private final Type   type;
+    private final String payload;       // REQUEST carries this (result string, or ack)
+    private final String errorMessage;  // ERROR carries this
 
     // ── REQUEST constructor (client → server) ─────────────────────────────
-    public static CalculatorProtocolMessage request(ExpressionNode expression) {
+    public static CalculatorProtocolMessage request(String payload) {
         return new CalculatorProtocolMessage(
-            Type.REQUEST, expression, 0, null
+            Type.REQUEST, payload, null
         );
     }
 
     // ── RESPONSE constructor (server → client) ────────────────────────────
-    public static CalculatorProtocolMessage response(double result, String requestId) {
+    public static CalculatorProtocolMessage response(String payload) {
         return new CalculatorProtocolMessage(
-            Type.RESPONSE, null, result, null
+            Type.RESPONSE, payload, null
         );
     }
 
     // ── ERROR constructor (server → client) ───────────────────────────────
     public static CalculatorProtocolMessage error(String message) {
         return new CalculatorProtocolMessage(
-            Type.ERROR, null, 0, message
+            Type.ERROR, null, message
         );
     }
 
-    private CalculatorProtocolMessage(Type type, ExpressionNode expression,
-                                      double result, String errorMessage) {
+    private CalculatorProtocolMessage(Type type, String payload,
+                                      String errorMessage) {
         this.type         = type;
-        this.expression   = expression;
-        this.result       = result;
+        this.payload      = payload;
         this.errorMessage = errorMessage;
-
     }
 
     // ── Accessors ─────────────────────────────────────────────────────────
 
-    public Type           getType()         { return type;         }
-    public ExpressionNode getExpression()   { return expression;   }
-    public double         getResult()       { return result;       }
-    public String         getErrorMessage() { return errorMessage; }
+    public Type   getType()         { return type;         }
+    public String getPayload()      { return payload;      }
+    public String getErrorMessage() { return errorMessage; }
 }

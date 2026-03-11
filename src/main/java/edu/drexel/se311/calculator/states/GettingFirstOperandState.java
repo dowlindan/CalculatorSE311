@@ -16,39 +16,35 @@ public class GettingFirstOperandState implements CalculatorState {
     @Override
     public void onDigit(CalculatorContext ctx, int digit) {
         // Append digit:  currentInput = currentInput * 10 + digit
-        ctx.setCurrentInput(ctx.getCurrentInput() * 10 + digit);
+        ctx.appendDigit(digit);
         // Stay in this state
     }
 
     @Override
     public void onAddSub(CalculatorContext ctx, char op) {
-        ctx.setAccumulator(ctx.getCurrentInput());
-        ctx.setCurrentInput(0);
-        ctx.setPendingAddSub(op);
-        ctx.transitionTo(ctx.waitingForAddSub);
+        ctx.storeLeftOperand(op);
+        ctx.resetCurrentNumber();
+        ctx.setPendingOp(op);
+        ctx.transitionTo(new WaitingForAddSubOperandState());
     }
 
     @Override
     public void onMulDiv(CalculatorContext ctx, char op) {
-        ctx.setAccumulator(ctx.getCurrentInput());
-        ctx.setCurrentInput(0);
-        ctx.setPendingMulDiv(op);
-        ctx.transitionTo(ctx.waitingForMulDiv);
+        ctx.storeLeftOperand(op);
+        ctx.resetCurrentNumber();
+        ctx.setPendingOp(op);
+        ctx.transitionTo(new WaitingForMulDivOperandState());
     }
 
     @Override
     public void onEquals(CalculatorContext ctx) {
-        // "5 =" — trivially move to Calculate with the number itself
-        ctx.setAccumulator(ctx.getCurrentInput());
-        ctx.setCurrentInput(0);
-        ctx.transitionTo(ctx.calculateState);
+        // "5 =" — simply evaluate what we've got (single number)
+        ctx.submitEquals();
+        ctx.transitionTo(new CalculateState());
     }
 
     @Override
     public void onClear(CalculatorContext ctx) {
         ctx.reset();
     }
-
-    // Private helper to avoid recursive context call
-    private void onEquals(CalculatorContext ctx, double ignored) {}
 }

@@ -10,7 +10,7 @@ import edu.drexel.se311.calculator.expressions.NumberNode;
  * Always run ValidatorVisitor first so this visitor can assume the
  * tree is well-formed.
  *
- * Returns Double — the computed result of the full expression.
+ * Returns Integer — the computed result of the full expression.
  *
  * Example:
  *   BinaryOperationNode(NumberNode(3), '+',
@@ -18,17 +18,17 @@ import edu.drexel.se311.calculator.expressions.NumberNode;
  *
  *   visitBinary  →  3 + (visitBinary → 4 * 2 → 8.0)  →  11.0
  */
-public class EvaluatorVisitor implements ExpressionVisitor<Double> {
+public class EvaluatorVisitor implements ExpressionVisitor<Integer> {
 
     @Override
-    public Double visitNumber(NumberNode node) {
+    public Integer visitNumber(NumberNode node) {
         return node.getValue();   // base case
     }
 
     @Override
-    public Double visitBinary(BinaryOperationNode node) {
-        double left  = node.getLeft().accept(this);    // recurse left
-        double right = node.getRight().accept(this);   // recurse right
+    public Integer visitBinary(BinaryOperationNode node) {
+        int left  = node.getLeft().accept(this);    // recurse left
+        int right = node.getRight().accept(this);   // recurse right
 
         return switch (node.getOperator()) {
             case '+' -> left + right;

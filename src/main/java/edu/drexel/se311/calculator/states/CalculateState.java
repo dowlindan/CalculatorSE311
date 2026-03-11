@@ -18,27 +18,27 @@ public class CalculateState implements CalculatorState {
 
     @Override
     public void onDigit(CalculatorContext ctx, int digit) {
-        // Start fresh with the new digit
-        ctx.setAccumulator(0);
-        ctx.setCurrentInput(digit);
-        ctx.setPendingAddSub((char) 0);
-        ctx.setPendingMulDiv((char) 0);
-        ctx.transitionTo(ctx.gettingFirstOperand);
+        // Start fresh: reset the calculator and begin typing the new number
+        ctx.reset();
+        ctx.appendDigit(digit);
+        ctx.transitionTo(new GettingFirstOperandState());
     }
 
     @Override
     public void onAddSub(CalculatorContext ctx, char op) {
         // Chain: use the displayed result as the new left-hand side
-        ctx.setPendingAddSub(op);
-        ctx.setCurrentInput(0);
-        ctx.transitionTo(ctx.waitingForAddSub);
+        ctx.storeLeftOperand(op);
+        ctx.resetCurrentNumber();
+        ctx.setPendingOp(op);
+        ctx.transitionTo(new WaitingForAddSubOperandState());
     }
 
     @Override
     public void onMulDiv(CalculatorContext ctx, char op) {
-        ctx.setPendingMulDiv(op);
-        ctx.setCurrentInput(0);
-        ctx.transitionTo(ctx.waitingForMulDiv);
+        ctx.storeLeftOperand(op);
+        ctx.resetCurrentNumber();
+        ctx.setPendingOp(op);
+        ctx.transitionTo(new WaitingForMulDivOperandState());
     }
 
     @Override
