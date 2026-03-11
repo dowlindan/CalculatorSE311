@@ -6,7 +6,7 @@ set -x
     
 # ---- Run ----
 echo "Running KWIC Server"
-java -jar KWICServer.jar "$@"
+java -jar CalculatorServer.jar "$@"
 
 # ---- Run Alternative ----
 # OUT_DIR="out"
