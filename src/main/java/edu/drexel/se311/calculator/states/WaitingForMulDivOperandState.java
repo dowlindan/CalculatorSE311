@@ -1,18 +1,6 @@
 package edu.drexel.se311.calculator.states;
 
-/**
- * WAITING FOR MUL/DIV OPERAND STATE
- *
- * A * or / was just pressed; waiting for the user to start typing
- * the right-hand operand for the higher-priority operation.
- *
- * Diagram transitions:
- *   0-9   → begin collecting RHS → GettingMulDivOperand
- *   +,-   → replace with add/sub operator → WaitingForAddSubOperand
- *   *,/   → replace pending mul/div operator, stay here
- *   =     → nothing meaningful yet, stay here
- *   C     → full reset → Start
- */
+// User just entered * or / and we're waiting for a number
 public class WaitingForMulDivOperandState implements CalculatorState {
 
     @Override
@@ -37,7 +25,9 @@ public class WaitingForMulDivOperandState implements CalculatorState {
     }
 
     @Override
-    public void onEquals(CalculatorContext ctx) { /* nothing to compute yet */ }
+    public void onEquals(CalculatorContext ctx) {
+        // do nothing
+    }
 
     @Override
     public void onClear(CalculatorContext ctx) {

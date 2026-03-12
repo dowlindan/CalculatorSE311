@@ -1,18 +1,6 @@
 package edu.drexel.se311.calculator.states;
 
-/**
- * WAITING FOR ADD/SUB OPERAND STATE
- *
- * A + or - was just pressed; we are waiting for the user to start
- * typing the right-hand operand.
- *
- * Diagram transitions:
- *   0-9   → begin collecting RHS → GettingAddSubOperand
- *   +,-   → replace pending operator (user changed their mind), stay here
- *   *,/   → switch to mul/div priority → WaitingForMulDivOperand
- *   =     → nothing meaningful yet, stay here
- *   C     → full reset → Start
- */
+// User just pressed +/- and we are waiting for the number
 public class WaitingForAddSubOperandState implements CalculatorState {
 
     @Override
@@ -36,7 +24,9 @@ public class WaitingForAddSubOperandState implements CalculatorState {
     }
 
     @Override
-    public void onEquals(CalculatorContext ctx) { /* nothing to compute yet */ }
+    public void onEquals(CalculatorContext ctx) {
+        // Do nothing
+     }
 
     @Override
     public void onClear(CalculatorContext ctx) {

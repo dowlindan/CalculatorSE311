@@ -1,19 +1,6 @@
 package edu.drexel.se311.calculator.states;
 
-/**
- * CALCULATE STATE
- *
- * The final result is ready in ctx.getAccumulator().
- * This state is a momentary landing point — the GUI reads the result
- * and displays it.  From here:
- *
- * Diagram transitions:
- *   0-9   → start a brand-new expression → GettingFirstOperand
- *   +,-   → chain the result into a new add/sub expression → WaitingForAddSub
- *   *,/   → chain the result into a new mul/div expression → WaitingForMulDiv
- *   =     → stay here (repeated = keeps showing same result)
- *   C     → full reset → Start
- */
+
 public class CalculateState implements CalculatorState {
 
     @Override
@@ -43,7 +30,7 @@ public class CalculateState implements CalculatorState {
 
     @Override
     public void onEquals(CalculatorContext ctx) {
-        // Repeated = — do nothing, result stays displayed
+        // Do nothing
     }
 
     @Override

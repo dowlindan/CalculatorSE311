@@ -1,20 +1,6 @@
 package edu.drexel.se311.calculator.states;
 
-/**
- * GETTING MUL/DIV OPERAND & CALC STATE
- *
- * The user is typing the right-hand operand for a * or / operation.
- * This state also "calculates" the mul/div result as soon as the user
- * moves on — hence the label "& Calc" on the diagram.
- *
- * Diagram transitions:
- *   0-9   → stay here (append digit)
- *   +,-   → apply pending mul/div NOW (higher precedence resolved),
- *             then store add/sub for later → WaitingForAddSubOperand
- *   *,/   → apply pending mul/div NOW, store new mul/div → WaitingForMulDivOperand
- *   =     → apply pending mul/div, then apply any pending add/sub → Calculate
- *   C     → full reset → Start
- */
+// User is actively typing right side of * or /
 public class GettingMulDivOperandState implements CalculatorState {
 
     @Override
@@ -26,7 +12,7 @@ public class GettingMulDivOperandState implements CalculatorState {
     // Handle lower precedence operator - evaluate pending * or / first
     @Override
     public void onAddSub(CalculatorContext ctx, char op) {
-       // e.g. 3 * 4 +: Evaluate 3*4 first, store result, then apply +
+       // Store what we have and move onto next number
        ctx.storeLeftOperand(op);
        ctx.resetCurrentNumber();
        ctx.setPendingOp(op);
@@ -35,7 +21,7 @@ public class GettingMulDivOperandState implements CalculatorState {
 
     @Override
     public void onMulDiv(CalculatorContext ctx, char op) {
-        // e.g. "3 * 4 *": Both are same precedence, so evaluate 3*4 first
+        // Same as above
         ctx.storeLeftOperand(op);
         ctx.resetCurrentNumber();
         ctx.setPendingOp(op);
