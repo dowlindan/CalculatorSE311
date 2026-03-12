@@ -7,12 +7,17 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CalculatorServer {
 
     public static final String HOST = "localhost";
     public static final int    PORT = 9090;
+
+    private int successfulCalculations = 0;
+    private final List<String> equations = new ArrayList<>();
 
 
     public void start() {
@@ -31,17 +36,27 @@ public class CalculatorServer {
         }
     }
 
-    private void handle(Socket socket) {
+    private synchronized void handle(Socket socket) {
         try (socket) {
             BufferedReader in = new BufferedReader(
                 new InputStreamReader(socket.getInputStream())
             );
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
-            String resultString = in.readLine();
+            String equationString = in.readLine();
             
-            if (resultString != null) {
-                System.out.println("Received result from client: " + resultString);
+            if (equationString != null) {
+                successfulCalculations++;
+                equations.add(equationString);
+                
+                System.out.println("Received equation from client: " + equationString);
+                System.out.println("\n=== Calculation Summary ===");
+                System.out.println("Total Successful Calculations: " + successfulCalculations);
+                System.out.println("All Equations:");
+                for (int i = 0; i < equations.size(); i++) {
+                    System.out.println("  " + (i + 1) + ". " + equations.get(i));
+                }
+                System.out.println("===========================\n");
                 
                 out.println("OK");
             }

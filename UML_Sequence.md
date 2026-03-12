@@ -195,28 +195,30 @@ activate Engine
 deactivate Engine
 Context -> Engine : setCurrentNumber(34)
 
-Context -> Display : notifyResultReady(34)
-Display -> GUI : onResultReady(34)
+Context -> Display : notifyResultReady(34, "4+5*6")
+Display -> GUI : onResultReady(34, "4+5*6")
 note right of GUI
   Display shows "34"
   State: CalculateState
 end note
 
-Context -> Network : notifyResultReady(34)
-Network -> Server : sendToServer("34")
+Context -> Network : notifyResultReady(34, "4+5*6")
+Network -> Server : sendToServer(34, "4+5*6")
 activate Server
 note right of Network
-  Creates result string "34"
+  Creates expression string "4+5*6 = 34"
   Sends via BufferedReader/PrintWriter
   to localhost:9090
 end note
 
 Server -> Server : BufferedReader.readLine()
-Server -> Server : Logs: "Received result from client: 34"
+Server -> Server : Stores equation and updates list
+Server -> Server : Logs: "Total successful calculations: 1"
+Server -> Server : Logs: "All equations: [4+5*6]"
 note right of Server
-  Receives: String "34"
-  Parses result value
-  Logs for auditing
+  Receives: Full expression string "4+5*6 = 34"
+  Stores to successful calculations list
+  Displays total count and all equations
 end note
 Server -> Network : PrintWriter.println("OK")
 note right of Server

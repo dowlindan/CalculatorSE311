@@ -23,8 +23,8 @@ public class ServerConnection implements CalculatorObserver {
     }
 
     @Override
-    public void onResultReady(int result) {
-        sendToServer(String.valueOf(result));
+    public void onResultReady(int result, String expression) {
+        sendToServer(expression + " = " + result);
     }
 
     @Override

@@ -28,8 +28,8 @@ public class CalculatorContext {
         observers.forEach(o -> o.onDisplayUpdate(getCurrentExpression()));
     }
 
-    private void notifyResultReady(int result) {
-        observers.forEach(o -> o.onResultReady(result));
+    private void notifyResultReady(int result, String expression) {
+        observers.forEach(o -> o.onResultReady(result, expression));
     }
 
     private void notifyError(String message) {
@@ -70,6 +70,7 @@ public class CalculatorContext {
     }
 
     public void submitEquals() {
+        String expression = getCurrentExpression();
         ExpressionNode tree = engine.evaluate();
         
         int result = tree.accept(new EvaluatorVisitor());
@@ -77,7 +78,7 @@ public class CalculatorContext {
         engine.reset();
         engine.setCurrentNumber(result);
 
-        notifyResultReady(result);
+        notifyResultReady(result, expression);
     }
 
     public String getCurrentExpression() {

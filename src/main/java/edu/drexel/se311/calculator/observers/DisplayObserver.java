@@ -16,7 +16,7 @@ public class DisplayObserver implements CalculatorObserver {
         display.setText(text);
     }
     @Override
-    public void onResultReady(int result) {
+    public void onResultReady(int result, String expression) {
         display.setText(String.valueOf(result));
     }
 

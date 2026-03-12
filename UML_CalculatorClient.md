@@ -143,7 +143,7 @@ end note
 
 interface CalculatorObserver {
     + onDisplayUpdate(text: String): void
-    + onResultReady(result: int): void
+    + onResultReady(result: int, expression: String): void
     + onError(message: String): void
 }
 
@@ -160,19 +160,22 @@ class DisplayObserver implements CalculatorObserver {
 
     + DisplayObserver(display: JTextField)
     + onDisplayUpdate(text: String): void
-    + onResultReady(result: int): void
+    + onResultReady(result: int, expression: String): void
     + onError(message: String): void
 }
 
 class ServerConnection implements CalculatorObserver {
     - host: String
     - port: int
+    - socket: Socket
+    - writer: PrintWriter
 
     + ServerConnection(host: String, port: int)
+    + connect(): void
     + onDisplayUpdate(text: String): void
-    + onResultReady(result: int): void
+    + onResultReady(result: int, expression: String): void
     + onError(message: String): void
-    - sendToServer(resultString: String): void
+    - sendToServer(expressionString: String): void
 }
 
 ' =====================================================================
@@ -205,7 +208,7 @@ class CalculatorContext {
     + getCurrentExpression(): String
     + reset(): void
     - notifyDisplayUpdate(): void
-    - notifyResultReady(result: int): void
+    - notifyResultReady(result: int, expression: String): void
     - notifyError(message: String): void
 }
 
