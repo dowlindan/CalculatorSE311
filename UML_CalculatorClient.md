@@ -347,40 +347,4 @@ CalculatorContext --> CalculatorObserver : notifies
 CalculatorObserver <|-- DisplayObserver
 CalculatorObserver <|-- ServerConnection
 
-' =====================================================================
-' PATTERN LEGEND
-' =====================================================================
-
-note as Legend
-  KEY DESIGN PATTERNS:
-
-  1. STATE PATTERN
-     Context: CalculatorStateMachine
-     State Interface: CalculatorState
-     Concrete States: StartState, GettingFirstOperandState, etc.
-     Role: Encapsulates behavior by state; enables state transitions
-
-  2. OBSERVER PATTERN
-     Subject: CalculatorContext
-     Observer Interface: CalculatorObserver
-     Concrete Observers: DisplayObserver, ServerConnection
-     Role: Decouples calculation from UI/network updates
-
-  3. VISITOR PATTERN
-     Visitor Interface: ExpressionVisitor<T>
-     Concrete Visitor: EvaluatorVisitor (arithmetic evaluation)
-     Element: ExpressionNode
-     Role: Separates tree operations from structure
-
-  4. COMPOSITE PATTERN
-     Component: ExpressionNode
-     Leaf: NumberNode (terminal value)
-     Composite: BinaryOperationNode (branch with operator and children)
-     Role: Builds recursive tree structures for expressions
-
-  5. BUILDER PATTERN
-     Builder/Factory: ExpressionBuilder
-     Role: Encapsulates tree construction
-end note
-
 @enduml
