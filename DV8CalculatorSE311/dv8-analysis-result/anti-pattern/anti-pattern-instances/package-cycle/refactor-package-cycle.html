@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Refactor Package Cycle</title>
+    <style>
+        html {
+            font-family: arial;
+        }
+        header {
+            text-align: center;
+        }
+    </style>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <header>
+        <h1>Refactor Package Cycle</h1>
+    </header>
+    <div>
+        <ul>
+            <li>The circular dependency between packages manifests itself as a loop dependency between packages (directories) that cannot form a lower triangle after applying namespace clustering in DV8.</li>
+        </ul>
+        <ul>
+            <li>Circular dependencies between packages may be reasonable and harmless.</li>
+        </ul>
+        <ul>
+            <li>Before refactoring, you should examine the loop between packages for the following symptoms.
+                <ul>
+                    <li>Shared directories, such as include, common, util, depend on other non-shared directories, or are interdependent.</li>
+                    <li>The functional directory depends on the test directory.</li>
+                    <li>.h files depend on .c files.</li>
+                </ul>
+            </li>
+        </ul>
+        <ul>
+            <li style="color:red;">These situations are very irregular designs and should be eliminated regardless of maintenance costs.</li>
+        </ul>
+        <ul>
+            <li>Analyze the activeness of these packages. If they have already generated high maintenance costs and will continue to be active, they should be refactored.</li>
+        </ul>
+        <ul>
+            <li>For circular dependencies between directories that contain functional modules, the following methods can be used to refactor and gradually restore the hierarchical relationship.</li>
+        </ul>
+        <ul>
+            <li>Refactoring method: establish a hierarchy relationship step by step, in the forming of the lower triangular structure.
+                <ul>
+                    <li>Using DV8 to detect the groups of files that cause packages to have cyclical dependencies. You can choose one at a time to refactor because there may be multiple such groups.</li>
+                    <li>For a selected file group that causes the package to loop dependent, use DV8 to find the design space for these files, i.e. all files that depend on those files, into the refactoring branch.</li>
+                    <li>Do the following in the refactoring branch:
+                        <ul>
+                            <li>Depending on the hierarchy of the target architecture, determine which functions are atomic, i.e. do not depend on other functions. These atomic functions are stripped from the original file and become separate modules. All atomic functions will form the first layer of the hierarchy.</li>
+                            <li>Identify the functional modules for the second layer and ensure that the second layer uses only the functional modules for the first layer.</li>
+                            <li>And so on, until the circular dependencies between packages all disappear.</li>
+                            <li>Write the appropriate unit test cases to ensure that the new code is functionally correct.</li>
+                            <li>Make sure the new code doesn't have code smells.</li>
+                            <li>Using DV8 to detect the refactored code, to check:
+                                <ul>
+                                    <li>Whether it meets the target design.</li>
+                                    <li>Whether forms a hierarchy.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

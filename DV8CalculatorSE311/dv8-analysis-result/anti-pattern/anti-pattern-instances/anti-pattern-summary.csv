@@ -1,0 +1,5 @@
+Type,InstanceCount,DistinctFileCount
+UnhealthyInheritance,2,7
+Clique,1,8
+PackageCycle,1,5
+Total,4,14

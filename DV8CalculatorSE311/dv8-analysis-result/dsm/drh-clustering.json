@@ -1,0 +1,184 @@
+{
+  "@schemaVersion" : "1.0",
+  "name" : "drh-clustering",
+  "structure" : [ {
+    "@type" : "group",
+    "name" : "L0",
+    "nested" : [ {
+      "@type" : "group",
+      "name" : "L0/M0",
+      "nested" : [ {
+        "@type" : "group",
+        "name" : "L0/M0/M0",
+        "nested" : [ {
+          "@type" : "item",
+          "name" : "visitors/ExpressionVisitor.java"
+        } ]
+      }, {
+        "@type" : "group",
+        "name" : "L0/M0/M1",
+        "nested" : [ {
+          "@type" : "item",
+          "name" : "expressions/ExpressionNode.java"
+        } ]
+      }, {
+        "@type" : "group",
+        "name" : "L0/M0/M2",
+        "nested" : [ {
+          "@type" : "item",
+          "name" : "expressions/BinaryOperationNode.java"
+        } ]
+      }, {
+        "@type" : "group",
+        "name" : "L0/M0/M3",
+        "nested" : [ {
+          "@type" : "item",
+          "name" : "expressions/NumberNode.java"
+        } ]
+      } ]
+    } ]
+  }, {
+    "@type" : "group",
+    "name" : "L1",
+    "nested" : [ {
+      "@type" : "group",
+      "name" : "L1/M0",
+      "nested" : [ {
+        "@type" : "item",
+        "name" : "visitors/EvaluatorVisitor.java"
+      } ]
+    }, {
+      "@type" : "group",
+      "name" : "L1/M1",
+      "nested" : [ {
+        "@type" : "group",
+        "name" : "L1/M1/L0",
+        "nested" : [ {
+          "@type" : "group",
+          "name" : "L1/M1/L0/M0",
+          "nested" : [ {
+            "@type" : "item",
+            "name" : "states/CalculatorState.java"
+          } ]
+        } ]
+      }, {
+        "@type" : "group",
+        "name" : "L1/M1/L1",
+        "nested" : [ {
+          "@type" : "group",
+          "name" : "L1/M1/L1/M0",
+          "nested" : [ {
+            "@type" : "item",
+            "name" : "states/WaitingForMulDivOperandState.java"
+          }, {
+            "@type" : "item",
+            "name" : "states/WaitingForAddSubOperandState.java"
+          } ]
+        }, {
+          "@type" : "group",
+          "name" : "L1/M1/L1/M1",
+          "nested" : [ {
+            "@type" : "item",
+            "name" : "states/StartState.java"
+          } ]
+        } ]
+      }, {
+        "@type" : "group",
+        "name" : "L1/M1/Control",
+        "nested" : [ {
+          "@type" : "group",
+          "name" : "L1/M1/Control/M2",
+          "nested" : [ {
+            "@type" : "item",
+            "name" : "states/GettingFirstOperandState.java"
+          } ]
+        }, {
+          "@type" : "group",
+          "name" : "L1/M1/Control/M3",
+          "nested" : [ {
+            "@type" : "item",
+            "name" : "states/CalculateState.java"
+          } ]
+        }, {
+          "@type" : "group",
+          "name" : "L1/M1/Control/M4",
+          "nested" : [ {
+            "@type" : "item",
+            "name" : "states/GettingAddSubOperandState.java"
+          } ]
+        }, {
+          "@type" : "group",
+          "name" : "L1/M1/Control/M5",
+          "nested" : [ {
+            "@type" : "item",
+            "name" : "states/GettingMulDivOperandState.java"
+          } ]
+        } ]
+      } ]
+    }, {
+      "@type" : "group",
+      "name" : "L1/M2",
+      "nested" : [ {
+        "@type" : "item",
+        "name" : "states/ExpressionEngine.java"
+      }, {
+        "@type" : "item",
+        "name" : "expressions/ExpressionBuilder.java"
+      } ]
+    }, {
+      "@type" : "group",
+      "name" : "L1/M3",
+      "nested" : [ {
+        "@type" : "group",
+        "name" : "L1/M3/L0",
+        "nested" : [ {
+          "@type" : "group",
+          "name" : "L1/M3/L0/M0",
+          "nested" : [ {
+            "@type" : "item",
+            "name" : "observers/CalculatorObserver.java"
+          } ]
+        } ]
+      }, {
+        "@type" : "group",
+        "name" : "L1/M3/L1",
+        "nested" : [ {
+          "@type" : "group",
+          "name" : "L1/M3/L1/M0",
+          "nested" : [ {
+            "@type" : "item",
+            "name" : "observers/ServerConnection.java"
+          } ]
+        }, {
+          "@type" : "group",
+          "name" : "L1/M3/L1/M1",
+          "nested" : [ {
+            "@type" : "item",
+            "name" : "observers/DisplayObserver.java"
+          } ]
+        }, {
+          "@type" : "group",
+          "name" : "L1/M3/L1/M2",
+          "nested" : [ {
+            "@type" : "item",
+            "name" : "CalculatorServer.java"
+          } ]
+        } ]
+      }, {
+        "@type" : "group",
+        "name" : "L1/M3/Control",
+        "nested" : [ {
+          "@type" : "item",
+          "name" : "CalculatorClient.java"
+        } ]
+      } ]
+    } ]
+  }, {
+    "@type" : "group",
+    "name" : "Control",
+    "nested" : [ {
+      "@type" : "item",
+      "name" : "states/CalculatorContext.java"
+    } ]
+  } ]
+}

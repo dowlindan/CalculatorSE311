@@ -1,0 +1,84 @@
+{
+  "@schemaVersion" : "1.0",
+  "name" : "pkg-clustering",
+  "structure" : [ {
+    "@type" : "group",
+    "name" : "observers",
+    "nested" : [ {
+      "@type" : "item",
+      "name" : "observers/CalculatorObserver.java"
+    }, {
+      "@type" : "item",
+      "name" : "observers/DisplayObserver.java"
+    }, {
+      "@type" : "item",
+      "name" : "observers/ServerConnection.java"
+    } ]
+  }, {
+    "@type" : "item",
+    "name" : "CalculatorServer.java"
+  }, {
+    "@type" : "group",
+    "name" : "visitors",
+    "nested" : [ {
+      "@type" : "item",
+      "name" : "visitors/ExpressionVisitor.java"
+    }, {
+      "@type" : "item",
+      "name" : "visitors/EvaluatorVisitor.java"
+    } ]
+  }, {
+    "@type" : "group",
+    "name" : "expressions",
+    "nested" : [ {
+      "@type" : "item",
+      "name" : "expressions/ExpressionNode.java"
+    }, {
+      "@type" : "item",
+      "name" : "expressions/NumberNode.java"
+    }, {
+      "@type" : "item",
+      "name" : "expressions/BinaryOperationNode.java"
+    }, {
+      "@type" : "item",
+      "name" : "expressions/ExpressionBuilder.java"
+    } ]
+  }, {
+    "@type" : "group",
+    "name" : "states",
+    "nested" : [ {
+      "@type" : "item",
+      "name" : "states/ExpressionEngine.java"
+    }, {
+      "@type" : "item",
+      "name" : "states/CalculatorState.java"
+    }, {
+      "@type" : "item",
+      "name" : "states/CalculatorContext.java"
+    }, {
+      "@type" : "item",
+      "name" : "states/StartState.java"
+    }, {
+      "@type" : "item",
+      "name" : "states/WaitingForMulDivOperandState.java"
+    }, {
+      "@type" : "item",
+      "name" : "states/WaitingForAddSubOperandState.java"
+    }, {
+      "@type" : "item",
+      "name" : "states/GettingAddSubOperandState.java"
+    }, {
+      "@type" : "item",
+      "name" : "states/CalculateState.java"
+    }, {
+      "@type" : "item",
+      "name" : "states/GettingMulDivOperandState.java"
+    }, {
+      "@type" : "item",
+      "name" : "states/GettingFirstOperandState.java"
+    } ]
+  }, {
+    "@type" : "item",
+    "name" : "CalculatorClient.java"
+  } ]
+}
