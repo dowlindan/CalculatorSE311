@@ -20,14 +20,15 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-import edu.drexel.se311.calculator.observers.*;
+import edu.drexel.se311.calculator.observers.DisplayObserver;
+import edu.drexel.se311.calculator.observers.ServerConnection;
 import edu.drexel.se311.calculator.states.CalculatorContext;
+
 
 public class CalculatorClient extends JFrame {
 
     private final JTextField display;
 
-    // ── Colour palette ────────────────────────────────────────────────────
     private static final Color BG           = new Color(0xCCDDEE);
     private static final Color BTN_FACE     = new Color(0x6699CC);
     private static final Color BTN_HOVER    = new Color(0x7AAAD8);
@@ -35,7 +36,6 @@ public class CalculatorClient extends JFrame {
     private static final Color BTN_TEXT     = Color.WHITE;
     private static final Color BORDER_COLOR = new Color(0x4477AA);
 
-    // ── Button layout ─────────────────────────────────────────────────────
     private static final String[][] BUTTON_LABELS = {
         { "1", "2", "3", "+" },
         { "4", "5", "6", "-" },
@@ -48,12 +48,10 @@ public class CalculatorClient extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
-        // ── Root panel ───────────────────────────────────────────────────
         JPanel root = new JPanel(new BorderLayout(8, 8));
         root.setBackground(BG);
         root.setBorder(new EmptyBorder(12, 12, 12, 12));
 
-        // ── Display ──────────────────────────────────────────────────────
         display = new JTextField("0");
         display.setHorizontalAlignment(JTextField.RIGHT);
         display.setEditable(false);
@@ -67,17 +65,14 @@ public class CalculatorClient extends JFrame {
         display.setPreferredSize(new Dimension(0, 52));
         root.add(display, BorderLayout.NORTH);
 
-        // ── Wire ServerConnection + observers ─────────────────────────────
         ServerConnection connection = new ServerConnection(
             CalculatorServer.HOST, CalculatorServer.PORT
         );
 
-        // ── Create state machine and give it the observers ─────────────────
         CalculatorContext context = new CalculatorContext();
         context.addObserver(new DisplayObserver(display));
         context.addObserver(connection);
 
-        // ── Button grid ──────────────────────────────────────────────────
         JPanel grid = new JPanel(new GridLayout(4, 4, 6, 6));
         grid.setBackground(BG);
 
@@ -97,14 +92,6 @@ public class CalculatorClient extends JFrame {
         setMinimumSize(new Dimension(280, 320));
     }
 
-    // ── Route button label → state machine ───────────────────────────────
-    //
-    // The state machine decides what to do with each input.
-    // On "=" the current state will eventually call
-    // CalculateState.submit() → context.submitToServer()
-    // → ServerConnection.send() → socket → CalculatorServer
-    // which wraps the expression in a CalculatorProtocolMessage.
-    //
     private void routeInput(CalculatorContext context, String label) {
         System.out.println("Label: " + label);
         switch (label) {
@@ -120,7 +107,6 @@ public class CalculatorClient extends JFrame {
         }
     }
 
-    // ── Styled button factory ─────────────────────────────────────────────
     private JButton makeButton(String label) {
         JButton btn = new JButton(label) {
             @Override
@@ -137,7 +123,6 @@ public class CalculatorClient extends JFrame {
                 g2.setColor(face);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
 
-                // subtle inner highlight
                 g2.setColor(new Color(255, 255, 255, 40));
                 g2.fillRoundRect(2, 2, getWidth() - 4, getHeight() / 2, 6, 6);
 
@@ -158,7 +143,6 @@ public class CalculatorClient extends JFrame {
         return btn;
     }
 
-    // ── Entry point ───────────────────────────────────────────────────────
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {

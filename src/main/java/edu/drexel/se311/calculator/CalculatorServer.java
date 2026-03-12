@@ -8,27 +8,12 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-/**
- * CALCULATOR SERVER
- *
- * Listens on localhost:9090 for incoming client connections.
- * For each connection it:
- *
- *   1. Reads a result string from the client
- *   2. Logs the result for auditing
- *   3. Sends back an acknowledgement
- *
- * Under the client-rich architecture, the server does not evaluate
- * expressions — it merely receives result strings and logs them.
- *
- * Each connection is handled on its own thread for concurrent clients.
- */
+
 public class CalculatorServer {
 
     public static final String HOST = "localhost";
     public static final int    PORT = 9090;
 
-    // ── Start listening ───────────────────────────────────────────────────
 
     public void start() {
         System.out.println("CalculatorServer listening on " + HOST + ":" + PORT);
@@ -46,11 +31,8 @@ public class CalculatorServer {
         }
     }
 
-    // ── Handle one client connection ──────────────────────────────────────
-
     private void handle(Socket socket) {
         try (socket) {
-            // Read result string from client
             BufferedReader in = new BufferedReader(
                 new InputStreamReader(socket.getInputStream())
             );
@@ -59,10 +41,8 @@ public class CalculatorServer {
             String resultString = in.readLine();
             
             if (resultString != null) {
-                // Log the result
                 System.out.println("Received result from client: " + resultString);
                 
-                // Send acknowledgement
                 out.println("OK");
             }
 
@@ -70,8 +50,6 @@ public class CalculatorServer {
             System.err.println("Connection error: " + e.getMessage());
         }
     }
-
-    // ── Entry point ───────────────────────────────────────────────────────
 
     public static void main(String[] args) {
         new CalculatorServer().start();
