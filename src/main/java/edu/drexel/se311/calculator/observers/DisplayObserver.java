@@ -2,17 +2,7 @@ package edu.drexel.se311.calculator.observers;
 
 import javax.swing.JTextField;
 
-/**
- * DISPLAY OBSERVER — Observer Pattern
- *
- * Updates the main number screen on the calculator UI.
- *
- * On result  → shows the numeric result
- * On error   → shows "Error"
- *
- * Knows about: its own JTextField only.
- * Knows nothing about: states, visitors, expressions, or the server.
- */
+
 public class DisplayObserver implements CalculatorObserver {
 
     private final JTextField display;

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import edu.drexel.se311.calculator.visitors.ExpressionVisitor;
 
+
 public class NumberNode implements ExpressionNode, Serializable {
 
     private final int value;
